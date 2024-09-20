@@ -1,0 +1,4 @@
+---LONGITUD DE LAS CADENAS---
+Longitud de abbab: 5
+Longitud de 6793836: 7
+Longitud de hola: 4
