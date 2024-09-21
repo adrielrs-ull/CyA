@@ -1,16 +1,21 @@
 # Variables
 CC = g++                 # Compilador
 CFLAGS = -Wall -g        # Opciones de compilación (muestra advertencias, habilita debug)
-OBJ = alfabeto_clase.o check_correct_parameters.o operator_overloading.o p02_strings.o codigos_de_operacion.o comprobador_apertura_archivos.o # Archivos objeto
+OBJ = clase_alfabeto.o check_correct_parameters.o operator_overloading.o p02_strings.o codigos_de_operacion.o comprobador_apertura_archivos.o clase_cadena.o clase_lenguaje.o # Archivos objeto
 TARGET = p02_strings     # Nombre del ejecutable
 
 # Regla principal: compila el ejecutable
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
 
+clase_lenguaje.o: clase_lenguaje.cpp
+	$(CC) $(CFLAGS) -c clase_lenguaje.cpp
+
+clase_cadena.o: clase_cadena.cpp
+	$(CC) $(CFLAGS) -c clase_cadena.cpp
 # Reglas para generar los archivos objeto
-alfabeto_clase.o: alfabeto_clase.cpp
-	$(CC) $(CFLAGS) -c alfabeto_clase.cpp
+clase_alfabeto.o: clase_alfabeto.cpp
+	$(CC) $(CFLAGS) -c clase_alfabeto.cpp
 
 check_correct_parameters.o: check_correct_parameters.cpp
 	$(CC) $(CFLAGS) -c check_correct_parameters.cpp

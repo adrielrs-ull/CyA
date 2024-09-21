@@ -16,8 +16,9 @@
 
 #include <iostream>
 #include <set>
-#include "alfabeto_clase.h"
+#include "clase_alfabeto.h"
 
+//symbol es un typedef de char
 //Esta función la usamos para mostrar el alfabeto en el archivo de salida
 void Alfabeto::MostrarAlfabeto(std::ofstream& salida) {
   int counter{0};

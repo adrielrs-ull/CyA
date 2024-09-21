@@ -16,33 +16,28 @@
 #include <iostream>
 #include <fstream>
 #include "codigos_de_operacion.h"
-#include "alfabeto_clase.h"
+#include "clase_alfabeto.h"
 #include "clase_cadena.h"
+#include "comprobador_apertura_archivo.h"
+#include "clase_lenguaje.h"
 
 //lleva a cabo el primer apartado de la práctica
 void OpcionAlfabeto(std::ifstream& archivo_entrada, std::ofstream& archivo_salida) {
-  if (!archivo_entrada.is_open()) { 
-    std::cout << "Error al abrir el archivo" << std::endl;
-  }
-
-  if (!archivo_salida.is_open()) {
-    std::cout << "Error al abrir el archivo de salida" << std::endl;
-  }
+  AperturaArchivos(archivo_entrada, archivo_salida);
 
   //simplemente le pongo una cabecera al documento. En este caso como hemos "calculado" el alfabeto asociado pues lo pongo de título
   archivo_salida << "---ALFABETO ASOCIADO---" << std::endl;
-  std::string palabra1;
-  std::string palabra2; 
+  Cadena cadena, alfabeto; 
 
   //Leo la cadena (palabra1) y el alfabeto (palabra2) del archivo de entrada
-  while (archivo_entrada >> palabra1 >> palabra2) {
-    Alfabeto alfabeto;
+  while (archivo_entrada >> cadena >> alfabeto) {
+    Alfabeto alfabeto_cadena;
 
     //si un simbolo de la primera cadena está en el alfabeto lo inserto en su alfabeto asociado
-    for (int i{0}; i < static_cast<int>(palabra1.size()); i++) {
-      for (int j{0}; j < static_cast<int>(palabra2.size()); j++) {
-        if (palabra1[i] == palabra2[j]) {
-          alfabeto.InsertarEnAlfabeto(palabra1[i]);
+    for (int i{0}; i < static_cast<int>(cadena.GetCadena().size()); i++) {
+      for (int j{0}; j < static_cast<int>(alfabeto.GetCadena().size()); j++) {
+        if (cadena.GetCadena()[i] == alfabeto.GetCadena()[j]) {
+          alfabeto_cadena.InsertarEnAlfabeto(cadena.GetCadena()[i]);
         }
       }
     }
@@ -50,36 +45,115 @@ void OpcionAlfabeto(std::ifstream& archivo_entrada, std::ofstream& archivo_salid
     
 
     //finalmente escribo en el archivo
-    alfabeto.MostrarAlfabeto(archivo_salida);
+    alfabeto_cadena.MostrarAlfabeto(archivo_salida);
   }
 
   archivo_salida.close();
   archivo_entrada.close();
 }
 
+
+
+
 //esta función devuelve la longitud de cada cadena del archivo
 void OpcionLongitud(std::ifstream& archivo_entrada, std::ofstream& archivo_salida) {
-  if (!archivo_entrada.is_open()) { 
-    std::cout << "Error al abrir el archivo" << std::endl;
-  }
+  
+  AperturaArchivos(archivo_entrada, archivo_salida);
 
-
-  if (!archivo_salida.is_open()) {
-    std::cout << "Error al abrir el archivo de salida" << std::endl;
-  }
   //título del documento
   archivo_salida << "---LONGITUD DE LAS CADENAS---" << std::endl;
   
-  Cadena palabra1;
-  Cadena palabra2;
-  while (archivo_entrada >> palabra1 >> palabra2) {
-    int longitud{static_cast<int>(palabra1.GetCadena().size())}; //le doy el valor del size de la cadena a la variable longitud
+  Cadena cadena;
+  Cadena alfabeto;
+  while (archivo_entrada >> cadena >> alfabeto) {
+    int longitud{static_cast<int>(cadena.GetCadena().size())}; //le doy el valor del size de la cadena a la variable longitud
     
     //imprimo en el documento la longitud de cada cadena
-    archivo_salida << "Longitud de " << palabra1.GetCadena() << ": " << longitud << std::endl;
+    archivo_salida << "Longitud de " << cadena.GetCadena() << ": " << longitud << std::endl;
   }
 
   archivo_salida.close();
   archivo_entrada.close();
 
+}
+
+
+
+
+
+void OpcionInversa(std::ifstream& archivo_entrada, std::ofstream& archivo_salida) {
+  AperturaArchivos(archivo_entrada, archivo_salida);
+
+  archivo_salida << "---INVERSA DE LAS CADENAS---" << std::endl;
+  Cadena cadena, alfabeto;
+  //leo la cadena y el alfabeto para luego leer la cadena al revés e ir insertando en la nueva cadena los simbolos en orden inverso
+  while (archivo_entrada >> cadena >> alfabeto) {
+    Cadena cadena_inversa;
+    for (int i{static_cast<int>(cadena.GetCadena().size()) - 1}; i >= 0; i--) {
+      cadena_inversa.SetCadena(cadena.GetCadena()[i]);
+    }
+    //muestro enel archivo el resultado
+    archivo_salida << "La cadena inversa de " << cadena.GetCadena() << ": " << cadena_inversa.GetCadena() << std::endl;
+  }
+
+  archivo_entrada.close();
+  archivo_salida.close();
+}
+
+
+
+
+
+
+
+void OpcionPrefijos(std::ifstream& archivo_entrada, std::ofstream& archivo_salida) {
+  AperturaArchivos(archivo_entrada, archivo_salida);
+
+  archivo_salida << "---PREFIJOS---" << std::endl;
+  Cadena cadena, alfabeto;
+  //creo un lenguaje para cada cadena
+  while (archivo_entrada >> cadena >> alfabeto) {
+    Lenguaje lenguaje;
+    //el bucle funciona de tal manera que lo que sería el límite va aumentando hasta el tamaño de la cadena. Por tanto el tamaño del prefijo aumenta tmb
+    for (int i{0}; i < static_cast<int>(cadena.GetCadena().size()); i++) {
+      //esta cadena auxiliar nos sirve para los prefijos
+      Cadena prefijo;
+      for (int j{0}; j <= i; j++) {
+        //añado los simbolos de la cadena a prefijos
+        prefijo.SetCadena(cadena.GetCadena()[j]);
+      }
+      //añado el prefijo al lenguaje
+      lenguaje.AñadirCadena(prefijo);
+    }
+    //finalmente escribo en el fichero el lenguaje
+    lenguaje.EscribirLenguaje(archivo_salida);
+  }
+}
+
+
+
+
+
+void OpcionSufijos(std::ifstream& archivo_entrada, std::ofstream& archivo_salida) {
+  AperturaArchivos(archivo_entrada, archivo_salida);
+
+  archivo_salida << "---SUFIJOS---" << std::endl;
+  Cadena cadena, alfabeto;
+  //creo un lenguaje para cada cadena
+  while (archivo_entrada >> cadena >> alfabeto) {
+    Lenguaje lenguaje;
+    //el bucle funciona de tal manera que lo que sería el límite va aumentando hasta el tamaño de la cadena. Por tanto el tamaño del prefijo aumenta tmb
+    for (int i{static_cast<int>(cadena.GetCadena().size()) - 1}; i >= 0 ; i--) {
+      //esta cadena auxiliar nos sirve para los prefijos
+      Cadena sufijo;
+      for (int j{i}; j < static_cast<int>(cadena.GetCadena().size()); j++) {
+        //añado los simbolos de la cadena a prefijos
+        sufijo.SetCadena(cadena.GetCadena()[j]);
+      }
+      //añado el prefijo al lenguaje
+      lenguaje.AñadirCadena(sufijo);
+    }
+    //finalmente escribo en el fichero el lenguaje
+    lenguaje.EscribirLenguaje(archivo_salida);
+  }
 }

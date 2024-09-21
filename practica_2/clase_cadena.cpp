@@ -16,14 +16,36 @@
 #include <iostream>
 #include "clase_cadena.h"
 
+//constructor por defecto
+Cadena::Cadena() {
+  cadena_ = "";
+}
+
+//constructor predefinido
 Cadena::Cadena(const std::string& string) {
   cadena_ = string;
 }
 
-std::string Cadena::GetCadena() {
+//getter
+std::string Cadena::GetCadena() const {
   return cadena_;
 };
 
-std::ifstream& operator>>(std::istream& is, Cadena string) {
+//setter
+void Cadena::SetCadena(symbol& simbolo) {
+  cadena_.push_back(simbolo);
+}
+
+//sobrecarga de inserción
+std::istream& operator>>(std::istream& is, Cadena& string) {
   is >> string.cadena_;
+  return is;
+}
+
+//esto es para que el set los ordene por tamaño y no por orden alfabético porque si no no se imprimiría en el orden correcto
+bool Cadena::operator<(const Cadena& other) const {
+  if (cadena_.size() != other.GetCadena().size()) {
+    return cadena_.size() < other.GetCadena().size();
+  }
+  return cadena_ < other.GetCadena();
 }

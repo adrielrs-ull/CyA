@@ -3,6 +3,6 @@
 
 #include <iostream>
 
-bool operator==(const std::string& cadena1, const std::string& cadena2);
+bool operator==(const std::string& cadena1, const std::string& cadena2) ;
 
 #endif

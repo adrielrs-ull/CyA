@@ -3,13 +3,16 @@
 #include <iostream>
 #include <vector>
 
+typedef char symbol;
+
 class Cadena {
  public:
   Cadena();
   Cadena(const std::string& string);
-  std::string GetCadena();
-  friend std::ifstream& operator>>(std::istream& is, Cadena string);
-
+  std::string GetCadena() const;
+  void SetCadena(symbol&);
+  friend std::istream& operator>>(std::istream& is, Cadena& string);
+  bool operator<(const Cadena& other) const;
  private:
   std::string cadena_;
 };

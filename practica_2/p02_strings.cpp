@@ -18,7 +18,6 @@
 #include <fstream>
 #include <string>
 #include "check_correct_parameters.h"
-#include "alfabeto_clase.h"
 #include "codigos_de_operacion.h"
 #include "comprobador_apertura_archivo.h"
 
@@ -28,6 +27,7 @@ int main(int argc, char* argv[]) {
     std::ofstream archivo_salida(argv[2]);
     int opcode{std::stoi(argv[3])};
     
+    //compruebo si los archivos se abren
     AperturaArchivos(archivo_entrada, archivo_salida);
 
     switch (opcode) {
@@ -42,20 +42,20 @@ int main(int argc, char* argv[]) {
             break;
           
           case 3:
-
+            //llamo a la funcion OpcionInversa para llevar a cabo la tarea
+            OpcionInversa(archivo_entrada, archivo_salida);
             break;
           
           case 4:
-
+            //llamo a la funcion OpcionPrefijos para llevar a cabo la tarea
+            OpcionPrefijos(archivo_entrada, archivo_salida);
             break;
           
           case 5:
-
+            //llamo a la funcion OpcionSufijos para llevar a cabo la tarea
+            OpcionSufijos(archivo_entrada, archivo_salida);
             break;
     }
-
-    
-    
   }
   return 0;
 }
