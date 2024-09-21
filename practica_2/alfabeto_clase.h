@@ -5,6 +5,9 @@
 #include <set>
 #include <fstream>
 
+//podemos usar el tipo char como simbolos
+typedef char symbol;
+
 class Alfabeto {
  public:
   //Dejo el constructor y destructor por defecto
@@ -12,7 +15,7 @@ class Alfabeto {
   void InsertarEnAlfabeto(const char&);
 
  private:
-  std::set<char> alfabeto_;
+  std::set<symbol> alfabeto_;
 };
 
 

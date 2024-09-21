@@ -17,6 +17,7 @@
 #include <fstream>
 #include "codigos_de_operacion.h"
 #include "alfabeto_clase.h"
+#include "clase_cadena.h"
 
 //lleva a cabo el primer apartado de la práctica
 void OpcionAlfabeto(std::ifstream& archivo_entrada, std::ofstream& archivo_salida) {
@@ -68,12 +69,14 @@ void OpcionLongitud(std::ifstream& archivo_entrada, std::ofstream& archivo_salid
   }
   //título del documento
   archivo_salida << "---LONGITUD DE LAS CADENAS---" << std::endl;
-  std::string palabra1, palabra2;
+  
+  Cadena palabra1;
+  Cadena palabra2;
   while (archivo_entrada >> palabra1 >> palabra2) {
-    int longitud{static_cast<int>(palabra1.size())}; //le doy el valor del size de la cadena a la variable longitud
+    int longitud{static_cast<int>(palabra1.GetCadena().size())}; //le doy el valor del size de la cadena a la variable longitud
     
     //imprimo en el documento la longitud de cada cadena
-    archivo_salida << "Longitud de " << palabra1 << ": " << longitud << std::endl;
+    archivo_salida << "Longitud de " << palabra1.GetCadena() << ": " << longitud << std::endl;
   }
 
   archivo_salida.close();

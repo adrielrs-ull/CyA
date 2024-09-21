@@ -21,7 +21,7 @@
 //Esta función la usamos para mostrar el alfabeto en el archivo de salida
 void Alfabeto::MostrarAlfabeto(std::ofstream& salida) {
   int counter{0};
-  for (char simbolo : alfabeto_) {
+  for (symbol simbolo : alfabeto_) {
     if (counter == 0) {
       salida << "{";
     }
