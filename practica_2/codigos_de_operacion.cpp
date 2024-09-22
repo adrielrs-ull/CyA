@@ -29,8 +29,9 @@ void OpcionAlfabeto(std::ifstream& archivo_entrada, std::ofstream& archivo_salid
   archivo_salida << "---ALFABETO ASOCIADO---" << std::endl;
   Cadena cadena, alfabeto; 
 
-  //Leo la cadena (palabra1) y el alfabeto (palabra2) del archivo de entrada
+  //Leo la cadena y el alfabeto del archivo de entrada
   while (archivo_entrada >> cadena >> alfabeto) {
+    //cfeo el alfabeto asociado
     Alfabeto alfabeto_cadena;
 
     //si un simbolo de la primera cadena está en el alfabeto lo inserto en su alfabeto asociado
@@ -114,7 +115,7 @@ void OpcionPrefijos(std::ifstream& archivo_entrada, std::ofstream& archivo_salid
   //creo un lenguaje para cada cadena
   while (archivo_entrada >> cadena >> alfabeto) {
     Lenguaje lenguaje;
-    //el bucle funciona de tal manera que lo que sería el límite va aumentando hasta el tamaño de la cadena. Por tanto el tamaño del prefijo aumenta tmb
+    //el bucle funciona de tal manera que lo que sería el límite va aumentando hasta el tamaño de la cadena. Por tanto el tamaño del prefijo aumenta también
     for (int i{0}; i < static_cast<int>(cadena.GetCadena().size()); i++) {
       //esta cadena auxiliar nos sirve para los prefijos
       Cadena prefijo;
