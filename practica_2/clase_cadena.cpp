@@ -49,3 +49,20 @@ bool Cadena::operator<(const Cadena& other) const {
   }
   return cadena_ < other.GetCadena();
 }
+
+//este operador sirve para comparar que dos cadenas sean distintas
+bool Cadena::operator!=(const Cadena& other) const {
+  if (cadena_ != other.GetCadena()) {
+    return true;
+  }
+  return false;
+  
+}
+
+bool Cadena::operator==(const Cadena& other) const {
+  if (cadena_ == other.GetCadena()) {
+    return true;
+  }
+  return false;
+  
+}

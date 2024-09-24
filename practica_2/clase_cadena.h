@@ -13,6 +13,8 @@ class Cadena {
   void SetCadena(symbol&);
   friend std::istream& operator>>(std::istream& is, Cadena& string);
   bool operator<(const Cadena& other) const;
+  bool operator!=(const Cadena& other) const;
+  bool operator==(const Cadena& other) const;
  private:
   std::string cadena_;
 };
