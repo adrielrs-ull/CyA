@@ -7,9 +7,10 @@
 class Lenguaje {
  public:
   Lenguaje();
+  Lenguaje(std::set<Cadena>&);
   void AñadirCadena(Cadena& cadena);
-  void EscribirLenguaje(std::ofstream&);
-
+  friend std::ostream& operator<<(std::ostream& os, Lenguaje& lenguaje);
+  std::set<Cadena> GetLenguaje();
  private:
   std::set<Cadena> lenguaje_;
 };

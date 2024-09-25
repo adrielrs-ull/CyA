@@ -17,19 +17,19 @@
 #include <fstream>
 #include "simbolos_en_alfabeto.h"
 
-bool SimbolosEnAlfabeto(const Cadena& cadena, const Cadena& alfabeto, std::ostream& salida) {
+bool SimbolosEnAlfabeto(const Cadena& cadena, Alfabeto& alfabeto, std::ofstream& salida) {
   Cadena cadena_vacia("&");
   //Si la cadena es distina de la cadena vacía
   if (cadena != cadena_vacia) {
-    
+    std::set<symbol> alfabeto_aux {alfabeto.GetAlfabeto()};
+    std::string cadena_aux {cadena.GetCadena()};
     //itero dentro de la cadena símbolo por símbolo
     for (int i{0}; i < static_cast<int>(cadena.GetCadena().size()); i++) {
       bool found_symbol{false};
       //itero dentro del alfabeto símbolo por símbolo para ver si el símbolo de la cadena está, si no está hago un break y salgo gracias a la variable bool
-      for (int j{0}; j < static_cast<int>(alfabeto.GetCadena().size()); j++) {
-        
+      for (symbol elem : alfabeto_aux) {
         //si encuentro el símbolo pongo la variable bool en true
-        if (cadena.GetCadena()[i] == alfabeto.GetCadena()[j]) {
+        if (cadena_aux[i] == elem) {
           found_symbol = true;
           break;
         }

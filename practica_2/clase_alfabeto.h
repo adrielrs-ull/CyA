@@ -11,7 +11,11 @@ typedef char symbol;
 class Alfabeto {
  public:
   //Dejo el constructor y destructor por defecto
-  void MostrarAlfabeto(std::ofstream&);
+  Alfabeto();
+  Alfabeto(std::set<symbol>&);
+  std::set<symbol> GetAlfabeto();
+  friend std::ostream& operator<<(std::ostream&, Alfabeto&);
+  friend std::istream& operator>>(std::istream&, Alfabeto&);
   void InsertarEnAlfabeto(const char&);
 
  private:

@@ -22,7 +22,8 @@
 #include "comprobador_apertura_archivo.h"
 
 int main(int argc, char* argv[]) {
-  if (!CheckCorrectParameters(argc, argv, 4)) {
+
+  if (!CheckCorrectParameters(argc, argv, 4, 5)) {
     std::ifstream archivo_entrada(argv[1]);
     std::ofstream archivo_salida(argv[2]);
     int opcode{std::stoi(argv[3])};
@@ -55,7 +56,19 @@ int main(int argc, char* argv[]) {
             //llamo a la funcion OpcionSufijos para llevar a cabo la tarea
             OpcionSufijos(archivo_entrada, archivo_salida);
             break;
+          if (argc == 5) {
+            case 6:
+              if (argc == 5) {
+                int potencia{std::stoi(argv[4])};
+                //llamo a la funcion OpcionPotencia para llevar a cabo la tarea
+                OpcionPotencia(archivo_entrada, archivo_salida, potencia);
+                break;
+
+              } else {
+                std::cout << "Faltan parámetros para llevar acabo esta función" << std::endl;
+              }
+          }
+      }
     }
-  }
   return 0;
 }

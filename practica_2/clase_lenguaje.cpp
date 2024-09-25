@@ -24,23 +24,31 @@ Lenguaje::Lenguaje() {
   lenguaje_.insert(cadena_vacía);
 }
 
+Lenguaje::Lenguaje(std::set<Cadena>& lenguaje) {
+  lenguaje_ = lenguaje;
+}
+
 //Opcion de añadir las cadenas al lenguaje
 void Lenguaje::AñadirCadena(Cadena& cadena) {
   lenguaje_.insert(cadena);
 }
 
-//Opcion para mostrar el lenguaje
-void Lenguaje::EscribirLenguaje(std::ofstream& salida) {
-  salida << "{";
+
+std::set<Cadena> Lenguaje::GetLenguaje() {
+  return lenguaje_;
+}
+
+std::ostream& operator<<(std::ostream& os, Lenguaje& lenguaje) {
+  os << "{";
   //recorro la cadena y cuando llegue al final cierro las llaves
   int counter{0};
-  for (Cadena cadena : lenguaje_) {
-    if (counter == static_cast<int>(lenguaje_.size()) - 1) {
-      salida << cadena.GetCadena() << "}" << std::endl;
+  for (Cadena cadena : lenguaje.GetLenguaje()) {
+    if (counter == static_cast<int>(lenguaje.GetLenguaje().size()) - 1) {
+      os << cadena.GetCadena() << "}";
     } else {
-      salida << cadena.GetCadena() << ",";
+      os << cadena.GetCadena() << ",";
     }
     counter++;
   }
-  
+  return os;
 }

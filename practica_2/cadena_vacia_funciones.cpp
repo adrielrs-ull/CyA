@@ -16,10 +16,14 @@
 #include <fstream>
 #include "cadena_vacia_funciones.h"
 
-void CadenaVaciaAlfabeto(std::ostream& salida) {
-  salida << "La cadena vacía denotada por '&' no tiene ningún alfabeto asociado." << std::endl;
+void CadenaVaciaAlfabeto(std::ofstream& salida) {
+  salida << "{undefined}" << std::endl;
 }
 
-void CadenaVaciaLongitud(std::ostream& salida) {
+void CadenaVaciaLongitud(std::ofstream& salida) {
   salida << "La cadena vacía denotada por '&' tiene longitud 0." << std::endl;
+}
+
+void CadenaVaciaPotencia(std::ofstream& salida) {
+  salida << "La potencia de la cadena vacía da como resultado la propia cadena: '&'" << std::endl;
 }

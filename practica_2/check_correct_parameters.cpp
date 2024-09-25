@@ -21,8 +21,8 @@
 #include "check_correct_parameters.h"
 #include "operator_overloading.h"
 
-bool CheckCorrectParameters(int argc, char* argv[], const int kLimit) {
-  if (argc == kLimit) {
+bool CheckCorrectParameters(int argc, char* argv[], const int kLimit, const int kLimit2) {
+  if (argc == kLimit || argc == kLimit2) {
     
     return false;
 
@@ -35,7 +35,7 @@ bool CheckCorrectParameters(int argc, char* argv[], const int kLimit) {
       std::cout << "Modo de empleo: ./p02_strings filein.txt fileout.txt opecode" << std::endl;
       std::cout << "Pruebe './p02_strings --help' para más información." << std::endl;
     } else {
-      std::string cadena1;
+      std::string cadena1{argv[1]};
       
       //compruebo si el número de elementos en la terminal es dos y si este es "--help" para imprimir la ayuda
       if (cadena1 == "--help") { //std::strcmp devuelve 0 si son iguales, negativo si la primera es menor y positivo si la primera es mayor

@@ -1,6 +1,6 @@
----SUFIJOS---
-{&,b,ab,bab,bbab,abbab}
-{&,6,36,836,3836,93836,793836,6793836}
-{&,a,la,ola,hola}
-{&}
+---LONGITUD DE LAS CADENAS---
+Longitud de abbab: 5
+Longitud de 6793836: 7
+Longitud de hola: 4
+La cadena vacía denotada por '&' tiene longitud 0.
 El símbolo 'e' de la cadena 'pedro' no se encuentra en el alfabeto pasado.

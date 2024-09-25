@@ -2,8 +2,9 @@
 #define CADENA_VACIA_FUNCIONES_H
 #include <fstream>
 
-void CadenaVaciaAlfabeto(std::ostream&);
-void CadenaVaciaLongitud(std::ostream&);
+void CadenaVaciaAlfabeto(std::ofstream&);
+void CadenaVaciaLongitud(std::ofstream&);
+void CadenaVaciaPotencia(std::ofstream&);
 
 
 

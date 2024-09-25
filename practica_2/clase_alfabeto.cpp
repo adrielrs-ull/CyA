@@ -18,23 +18,45 @@
 #include <set>
 #include "clase_alfabeto.h"
 
+Alfabeto::Alfabeto() {
+  alfabeto_ = alfabeto_;
+}
+
+Alfabeto::Alfabeto(std::set<symbol>& alfabeto) {
+  alfabeto_ = alfabeto;
+}
+
+std::set<symbol> Alfabeto::GetAlfabeto() {
+  return alfabeto_;
+}
+
 //symbol es un typedef de char
 //Esta función la usamos para mostrar el alfabeto en el archivo de salida
-void Alfabeto::MostrarAlfabeto(std::ofstream& salida) {
+std::ostream& operator<<(std::ostream& os, Alfabeto& alfabeto) {
   int counter{0};
   //recorro el set con un contador para saber cuàndo llego al final y poder cerrar las llaves
-  for (symbol simbolo : alfabeto_) {
+  for (symbol simbolo : alfabeto.GetAlfabeto()) {
     if (counter == 0) {
-      salida << "{";
+      os << "{";
     }
     
-    if (counter == static_cast<int>(alfabeto_.size()) - 1) {
-      salida << simbolo << "}" << std::endl;
+    if (counter == static_cast<int>(alfabeto.GetAlfabeto().size()) - 1) {
+      os << simbolo << "}" << std::endl;
     } else {
-      salida << simbolo << ", ";
+      os << simbolo << ", ";
     }
     counter++;
   }
+  return os;
+}
+
+std::istream& operator>>(std::istream& is, Alfabeto& alfabeto) {
+  std::string aux;
+  is >> aux;
+  for (int i{0}; i < static_cast<int>(aux.size()); i++) {
+    alfabeto.InsertarEnAlfabeto(aux[i]);
+  }
+  return is;
 }
 
 //Esta función sirve para insertar en el set el nuevo simbolo

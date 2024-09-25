@@ -3,8 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include "clase_cadena.h"
+#include "clase_alfabeto.h"
 
-bool SimbolosEnAlfabeto(const Cadena&, const Cadena&, std::ostream&);
+bool SimbolosEnAlfabeto(const Cadena&, Alfabeto&, std::ofstream&);
 
 
 

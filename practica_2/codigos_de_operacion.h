@@ -9,6 +9,7 @@ void OpcionLongitud(std::ifstream&, std::ofstream&);
 void OpcionInversa(std::ifstream&, std::ofstream&);
 void OpcionPrefijos(std::ifstream&, std::ofstream&);
 void OpcionSufijos(std::ifstream&, std::ofstream&);
+void OpcionPotencia(std::ifstream&, std::ofstream&, const int);
 
 
 #endif 
