@@ -13,7 +13,7 @@
 
 #include "code_analyzer.h"
 
-void BlockComments(int line_counter, int beginning, int end, int& block_comments_counter, bool& in_description, bool& in_block, Block_Comment& description, Block_Comment& block_comments, std::string line, std::regex description_beginning) {
+void BlockComments(int& line_counter, int& beginning, int end, int& block_comments_counter, bool& in_description, bool& in_block, Block_Comment& description, Block_Comment& block_comments, std::string line, std::regex description_beginning) {
       //si estamos en la primera línea y vemos uel coienzo de un bloque de código leemos y almacenamos la descripcion
       if (line_counter == 1 && std::regex_search(line, description_beginning)) {
         beginning = line_counter;
@@ -53,6 +53,16 @@ void BlockComments(int line_counter, int beginning, int end, int& block_comments
       }      
 }
 
+void Line_Comments(const std::string& line, std::smatch& line_comments_found, int& line_comments_counter, int line_counter, Comment& line_comments) {
+  if (std::regex_search(line, line_comments_found, std::regex("^\\s*//.*"))) {
+    line_comments_counter++;
+    std::string line_aux = line_comments_found.str();
+    if (std::regex_search(line_aux, std::regex("^\\s*"))) {
+      line_aux = std::regex_replace(line_aux, std::regex("^\\s*"), "");
+    }
+    line_comments.AddComment(line_aux, line_counter);
+  }
+}
 
 void Code_Analyzer(std::ifstream& archivo_entrada, std::ofstream& archivo_salida) {
   //Compruebo si el archivo se puede abrir
@@ -66,6 +76,10 @@ void Code_Analyzer(std::ifstream& archivo_entrada, std::ofstream& archivo_salida
     int beginning{0};
     int end{0};
     int block_comments_counter{0};
+    //variables para los comentarios de línea
+    std::smatch line_comments_found;
+    Comment line_comments;
+    int line_comments_counter{0};
     //variables para leer las líneas y el contador de la línea
     std::string line;
     int line_counter{0};
@@ -77,11 +91,12 @@ void Code_Analyzer(std::ifstream& archivo_entrada, std::ofstream& archivo_salida
       line_counter++;
       //miro los bloques de comentarios
       BlockComments(line_counter, beginning, end, block_comments_counter, in_description, in_block, description, block_comments, line, description_beginning);
-
+      //miro las lineas de comentarios
+      Line_Comments(line, line_comments_found, line_comments_counter, line_counter, line_comments);
     }
-    archivo_salida << description << block_comments;
+    archivo_salida << description << block_comments << line_comments;
 
   } else {
     std::cout << "Problema al abrir el archivo de entrada" << std::endl;
   }
-}
+} 

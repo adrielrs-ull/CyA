@@ -29,7 +29,7 @@
  */
 #include <iostream>
 #include <cassert>
-
+    //Prueba
 // Función que calcula el factorial del argumento
 int Factorial(int number) {
     switch (number) {
@@ -44,7 +44,7 @@ int Factorial(int number) {
             return factorial;
     }
 }
-
+            //Otra prueba
 int main() {
     std::cout << "Introduzca el numero de factoriales a calcular: ";
     int limit;
