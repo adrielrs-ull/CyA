@@ -18,6 +18,7 @@ class Block_Comment {
   void PushBack(std::string&, int);
   void MostrarLineas();
   void Resize(int);
+  bool Empty();
 
  private:
   std::vector<block_comment> block_comment_;

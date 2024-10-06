@@ -52,5 +52,8 @@ int main() {
     for (int i = 1; i <= limit; ++i) {
         std::cout << i << "! = " << (double)Factorial(i) << std::endl;
     }
+    while (false) {
+        std::cout << "hola" << std::endl;
+    }
     return 0;
 }

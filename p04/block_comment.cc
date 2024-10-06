@@ -18,11 +18,13 @@ Block_Comment::Block_Comment() {
 }
 
 
-
+bool Block_Comment::Empty() {
+  return block_comment_.empty();
+}
 //recorremos el vector que almacena los bloques de cadenas (cada bloque es un vector de string) --> por eso tiene estructura matricial
 std::ostream& operator<<(std::ostream& os, Block_Comment& block_comment) {
   for(int i{0}; i < static_cast<int>(block_comment.GetBlock_Comment().size()); i++) {
-    os << "Line [" << block_comment.GetBeginning(i) << "-" << block_comment.GetEnd(i) << "]: " << std::endl;
+    os << "[Line " << block_comment.GetBeginning(i) << "-" << block_comment.GetEnd(i) << "] " << std::endl;
     for (int j{0}; j < static_cast<int>(block_comment.GetBlock_Comment()[i].size()); j++) {
       os << block_comment.GetBlock_Comment()[i][j] << std::endl;
     }
