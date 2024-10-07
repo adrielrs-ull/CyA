@@ -6,11 +6,11 @@
 #include <vector>
 typedef std::vector<std::string> block_comment;
 
-class Block_Comment {
+class BlockComment {
  public:
-  Block_Comment();
-  friend std::ostream& operator<<(std::ostream&, Block_Comment&);
-  std::vector<block_comment> GetBlock_Comment() const;
+  BlockComment();
+  friend std::ostream& operator<<(std::ostream&, BlockComment&);
+  std::vector<block_comment> GetBlockComment() const;
   std::vector<std::pair<int, int>> GetLines() const;
   int GetBeginning(int n) const;
   int GetEnd(int n) const;

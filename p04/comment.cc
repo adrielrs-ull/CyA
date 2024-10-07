@@ -36,7 +36,7 @@ void Comment::Resize(int n) {
 //sobrecarga del operador para imprimir
 std::ostream& operator<<(std::ostream& os, Comment& comment) {
   for (int i{0}; i < static_cast<int>(comment.GetComment().size()); i++) {
-    os << "[Line" << comment.GetLines()[i] << "] " << comment.GetComment()[i] << std::endl;
+    os << "[Linea " << comment.GetLines()[i] << "] " << comment.GetComment()[i] << std::endl;
   }
   return os;
 }

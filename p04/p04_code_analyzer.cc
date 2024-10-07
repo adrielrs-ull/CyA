@@ -19,9 +19,10 @@
 
 int main(int argc, char* argv[]) {
   if (!CheckCorrectParameters(argc, argv, 3)) {
+    std::string nombre_archivo_entrada{argv[1]};
     std::ifstream archivo_entrada{argv[1]};
     std::ofstream archivo_salida{argv[2]};
-    Code_Analyzer(archivo_entrada,archivo_salida);
+    CodeAnalyzer(archivo_entrada, archivo_salida, nombre_archivo_entrada);
   }
   return 0;
 }

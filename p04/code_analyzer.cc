@@ -6,14 +6,15 @@
   * @author Adriel Reyes Suárez alu0101640136@ull.edu.es
   * @date Oct 5 2024
   * @software license https://www.gnu.org/licenses/gpl-3.0.html
-  * @brief Función que analiza el código
+  * @brief Función que analiza el código desglosada en varias funciones para una mejor presentación
   * @bug There are no known bugs
   * 
   */
 
 #include "code_analyzer.h"
 
-void BlockComments(int& line_counter, int& beginning, int end, int& block_comments_counter, bool& in_description, bool& in_block, Block_Comment& description, Block_Comment& block_comments, std::string line, std::regex description_beginning) {
+//función que busca los bloques de comentarios
+void BlockComments(int& line_counter, int& beginning, int end, int& block_comments_counter, bool& in_description, bool& in_block, BlockComment& description, BlockComment& block_comments, std::string line, std::regex description_beginning) {
       //si estamos en la primera línea y vemos uel coienzo de un bloque de código leemos y almacenamos la descripcion
       if (line_counter == 1 && std::regex_search(line, description_beginning)) {
         beginning = line_counter;
@@ -53,7 +54,8 @@ void BlockComments(int& line_counter, int& beginning, int end, int& block_commen
       }      
 }
 
-void Line_Comments(const std::string& line, std::smatch& line_comments_found, int line_counter, Comment& line_comments) {
+//función que bisca los comentarios en linea
+void LineComments(const std::string& line, std::smatch& line_comments_found, int line_counter, Comment& line_comments) {
   //busco en la linea leida si se encuentra el patrón y el vector smatch guarda la coincidencia
   if (std::regex_search(line, line_comments_found, std::regex("^\\s*//.*"))) {
     std::string line_aux = line_comments_found.str();
@@ -66,13 +68,104 @@ void Line_Comments(const std::string& line, std::smatch& line_comments_found, in
   }
 }
 
-void Code_Analyzer(std::ifstream& archivo_entrada, std::ofstream& archivo_salida) {
+//función que busca los bucles
+void LoopsFinder(std::string& line, std::smatch& loop_found, Loops& loops, int& line_counter) {
+  if (std::regex_search(line, std::regex("\\s*while\\s*\\([^\\)]*\\)"))) {
+    std::regex_search(line, loop_found, std::regex("while"));
+    std::string loop_aux = loop_found.str();
+    loops.AddLoop(loop_aux, line_counter);
+    loops.AddCounterWhile();
+  } else if (std::regex_search(line, std::regex("\\s*for\\s*\\([^\\)]*\\)"))) {
+    std::regex_search(line, loop_found, std::regex("for"));
+    std::string loop_aux = loop_found.str();
+    loops.AddLoop(loop_aux, line_counter);
+    loops.AddCounterFor();
+  }
+}
+
+//función que busca si hay main
+void IsThereMain(const std::string& line, bool& is_there_main) {
+  if (std::regex_search(line, std::regex("int main()"))) {
+    is_there_main = true;
+  }
+}
+
+//función que busca las variables
+void VariablesFinder(std::string& line, int line_counter, Variables& variables) {
+  //el primer if es para si es un int o un double
+  if (std::regex_search(line, std::regex("^\\s*int (?!main).*;$"))) {
+    //creo el tipo
+    std::string int_type{"int"};
+    //ahora creo la cadena sin el tipo
+    std::string variable_without_type = std::regex_replace(line, std::regex("^\\s*int\\s*"), "");
+    //le quito el ';' para una mejor presentación
+    variable_without_type = std::regex_replace(variable_without_type, std::regex(";"), "");
+    //añado la linea e incremento el contador de los int
+    variables.AddLine(int_type, variable_without_type, line_counter);
+    variables.AddInt();
+  } else if (std::regex_search(line, std::regex("\\s*double .*;$"))) {
+    //creo el tipo
+    std::string double_type{"double"};
+    //creo la cadena sin el tipo y el punto y coma
+    std::string variable_without_type = std::regex_replace(line, std::regex("^\\s*double\\s*"), "");
+    variable_without_type = std::regex_replace(variable_without_type, std::regex(";"), "");
+    //añado la cadena y aumento el contador de double
+    variables.AddLine(double_type, variable_without_type, line_counter);
+    variables.AddDouble();
+  }
+}
+
+//función para escribir en el archivo de salida el resultado
+void WriteResult(std::ofstream& archivo_salida, std::string& nombre_archivo_entrada,  BlockComment& description, BlockComment& block_comments, Comment& comments, Loops& loops, bool is_there_main, Variables& variables) {
+  archivo_salida << "PROGRAM: " << nombre_archivo_entrada << std::endl;
+  if (!description.Empty()) {
+    archivo_salida << "DESCRIPTION:" << std::endl;
+    for(int i{0}; i < static_cast<int>(description.GetBlockComment().size()); i++) {
+    for (int j{0}; j < static_cast<int>(description.GetBlockComment()[i].size()); j++) {
+      archivo_salida << description.GetBlockComment()[i][j] << std::endl;
+    }
+  }
+  }
+  if (!variables.Empty()) {
+    archivo_salida << std::endl;
+    archivo_salida << "VARIABLES:" << std::endl;
+    archivo_salida << variables;
+  }
+
+  if (!loops.Empty()) {
+    archivo_salida << std::endl;
+    archivo_salida << "STATEMENTS:" << std::endl;
+    archivo_salida << loops; 
+  }
+  archivo_salida << std::endl;
+  archivo_salida << "MAIN:" << std::endl;
+  if (is_there_main) {
+    archivo_salida << "True" << std::endl;
+  } else {
+    archivo_salida << "False" << std::endl;
+  }
+
+  if (!comments.Empty()) {
+    archivo_salida << std::endl;
+    archivo_salida << "COMMENTS:" << std::endl;
+    if (!description.Empty()) {
+      archivo_salida << "[Linea " << description.GetBeginning(0) << "-" << description.GetEnd(0) << "] DESCRIPTION" << std::endl;
+    }
+    if (!block_comments.Empty()) {
+      archivo_salida << block_comments << std::endl;
+    }
+    archivo_salida << comments;
+  }
+}
+
+//función principal
+void CodeAnalyzer(std::ifstream& archivo_entrada, std::ofstream& archivo_salida, std::string& nombre_archivo_entrada) {
   //Compruebo si el archivo se puede abrir
   if (archivo_entrada.is_open()) {
     //variables para los bloques de comentarios
     std::regex description_beginning(("/\\*\\*"));
-    Block_Comment description;
-    Block_Comment block_comments;
+    BlockComment description;
+    BlockComment block_comments;
     bool in_description{false};
     bool in_block{false};
     int beginning{0};
@@ -87,26 +180,30 @@ void Code_Analyzer(std::ifstream& archivo_entrada, std::ofstream& archivo_salida
     //variables para leer las líneas y el contador de la línea
     std::string line;
     int line_counter{0};
+    //variables para buscar el main
+    bool is_there_main{false};
+    //variables para la búsqueda de variables
+    Variables variables;
     
-
-
     //leo línea por línea para luego ir buscando en ella las cosas
     while (std::getline(archivo_entrada, line)) {
       line_counter++;
+      //miro si hay main
+      IsThereMain(line, is_there_main);
       //miro los bloques de comentarios
       BlockComments(line_counter, beginning, end, block_comments_counter, in_description, in_block, description, block_comments, line, description_beginning);
       //miro las lineas de comentarios
-      Line_Comments(line, line_comments_found, line_counter, line_comments);
-
-      if (std::regex_search(line, std::regex("\\s*(for|while)\\s*\\([^\\)]*\\)"))) {
-        std::regex_search(line, loop_found, std::regex("for|while"));
-        std::string loop_aux = loop_found.str();
-        loops.AddLoop(loop_aux, line_counter);
-      }
+      LineComments(line, line_comments_found, line_counter, line_comments);
+      //miro las lineas que tengan bucles
+      LoopsFinder(line, loop_found, loops, line_counter);
+      //miro las líneas que tengan la declaración de alguna variable
+      VariablesFinder(line, line_counter, variables);
     }
-    archivo_salida << description << block_comments << line_comments << loops;
-
+    //escribo el resultado
+    WriteResult(archivo_salida, nombre_archivo_entrada,  description, block_comments, line_comments, loops, is_there_main, variables);
   } else {
     std::cout << "Problema al abrir el archivo de entrada" << std::endl;
   }
+  archivo_entrada.close();
+  archivo_salida.close();
 } 

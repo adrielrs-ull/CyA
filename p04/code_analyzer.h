@@ -9,9 +9,9 @@
 #include "comment.h"
 #include "block_comment.h"
 #include "loops.h"
-void BlockComments(int& line_counter, int& beginning, int end, int& block_comments_counter, bool& in_description, bool& in_block, Block_Comment& description, Block_Comment& block_comments, std::string line, std::regex description_beginning);
-void LineComments(const std::string& line, std::smatch& line_comments_found, int& line_comments_counter, int line_counter, Comment& line_comments);
-void Code_Analyzer(std::ifstream&, std::ofstream&);
+#include "variables.h"
+
+void CodeAnalyzer(std::ifstream&, std::ofstream&, std::string&);
 
 
 #endif
