@@ -13,16 +13,13 @@ DESCRIPTION:
 
 VARIABLES:
 [Line 40] INT: factorial = 1
-[Line 50] INT: limit
-[Line 51] DOUBLE: prueba = 0
 
 STATEMENTS:
 [Line 41] LOOP: for
-[Line 53] LOOP: for
-[Line 56] LOOP: while
+[Line 37] CASE: 1
 
 MAIN:
-True
+False
 
 COMMENTS:
 [Linea 1-10] DESCRIPTION
@@ -41,6 +38,32 @@ COMMENTS:
  * asd
  * asd
  */
+[Line 48-75] 
+/**
+
+int main() {
+    std::couIN:
+True >> limit;
+    for (int i = 1; i <= limit; ++i) {
+        std::cout << i << "! = " << (double)Factorial(i) << std::endl;
+    }
+    while (false) {
+        std::cout << "hola" << std::endl;
+    }
+    int pepe{1};
+    switch (pepe)
+    {
+    case 1:
+
+        break;
+    case 2:
+        break;
+    tar -czvf p04_nombre_apellidos.tgz p04 default:
+        break;
+    }
+    return 0;
+}
+*/
 
 [Linea 32] //Prueba
 [Linea 33] // Función que calcula el factorial del argumento

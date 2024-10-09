@@ -1,7 +1,7 @@
 # Variables
 CC = g++                 # Compilador
 CFLAGS = -Wall -g        # Opciones de compilación (muestra advertencias, habilita debug)
-OBJ = check_correct_parameters.o code_analyzer.o comment.o block_comment.o p04_code_analyzer.o loops.o variables.o # Archivos objeto
+OBJ = check_correct_parameters.o code_analyzer.o comment.o block_comment.o p04_code_analyzer.o loops.o variables.o case.o # Archivos objeto
 TARGET = code_analyzer   # Nombre del ejecutable
 
 # Regla principal: compila el ejecutable
@@ -11,6 +11,9 @@ $(TARGET): $(OBJ)
 # Reglas para generar los archivos objeto
 check_correct_parameters.o: check_correct_parameters.cc
 	$(CC) $(CFLAGS) -c check_correct_parameters.cc
+
+case.o: case.cc
+	$(CC) $(CFLAGS) -c case.cc
 
 variables.o: variables.cc
 	$(CC) $(CFLAGS) -c variables.cc

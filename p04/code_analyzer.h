@@ -10,6 +10,7 @@
 #include "block_comment.h"
 #include "loops.h"
 #include "variables.h"
+#include "case.h"
 
 void CodeAnalyzer(std::ifstream&, std::ofstream&, std::string&);
 

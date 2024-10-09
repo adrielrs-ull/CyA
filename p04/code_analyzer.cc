@@ -116,7 +116,7 @@ void VariablesFinder(std::string& line, int line_counter, Variables& variables) 
 }
 
 //función para escribir en el archivo de salida el resultado
-void WriteResult(std::ofstream& archivo_salida, std::string& nombre_archivo_entrada,  BlockComment& description, BlockComment& block_comments, Comment& comments, Loops& loops, bool is_there_main, Variables& variables) {
+void WriteResult(std::ofstream& archivo_salida, std::string& nombre_archivo_entrada,  BlockComment& description, BlockComment& block_comments, Comment& comments, Loops& loops, bool is_there_main, Variables& variables, Case& switch_cases) {
   archivo_salida << "PROGRAM: " << nombre_archivo_entrada << std::endl;
   if (!description.Empty()) {
     archivo_salida << "DESCRIPTION:" << std::endl;
@@ -136,6 +136,10 @@ void WriteResult(std::ofstream& archivo_salida, std::string& nombre_archivo_entr
     archivo_salida << std::endl;
     archivo_salida << "STATEMENTS:" << std::endl;
     archivo_salida << loops; 
+  }
+  
+  if(!switch_cases.Empty()) {
+    archivo_salida << switch_cases;
   }
   archivo_salida << std::endl;
   archivo_salida << "MAIN:" << std::endl;
@@ -184,23 +188,30 @@ void CodeAnalyzer(std::ifstream& archivo_entrada, std::ofstream& archivo_salida,
     bool is_there_main{false};
     //variables para la búsqueda de variables
     Variables variables;
-    
-    //leo línea por línea para luego ir buscando en ella las cosas
+    //variables para el case.
+    Case switch_cases;
     while (std::getline(archivo_entrada, line)) {
       line_counter++;
-      //miro si hay main
-      IsThereMain(line, is_there_main);
       //miro los bloques de comentarios
       BlockComments(line_counter, beginning, end, block_comments_counter, in_description, in_block, description, block_comments, line, description_beginning);
       //miro las lineas de comentarios
       LineComments(line, line_comments_found, line_counter, line_comments);
-      //miro las lineas que tengan bucles
-      LoopsFinder(line, loop_found, loops, line_counter);
-      //miro las líneas que tengan la declaración de alguna variable
-      VariablesFinder(line, line_counter, variables);
+      if (!in_block) {
+        //miro si hay main
+        IsThereMain(line, is_there_main);
+        //miro las lineas que tengan bucles
+        LoopsFinder(line, loop_found, loops, line_counter);
+        //miro las líneas que tengan la declaración de alguna variable
+        VariablesFinder(line, line_counter, variables);
+        if (std::regex_search(line, std::regex("\\s*case .*:$"))) {
+          line = std::regex_replace(line, std::regex("\\s*case "), "");
+          line = std::regex_replace(line, std::regex(":$"), "");
+          switch_cases.AddLine(line, line_counter);
+        }
+      }
     }
     //escribo el resultado
-    WriteResult(archivo_salida, nombre_archivo_entrada,  description, block_comments, line_comments, loops, is_there_main, variables);
+    WriteResult(archivo_salida, nombre_archivo_entrada,  description, block_comments, line_comments, loops, is_there_main, variables, switch_cases);
   } else {
     std::cout << "Problema al abrir el archivo de entrada" << std::endl;
   }

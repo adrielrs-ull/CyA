@@ -33,7 +33,7 @@
 // Función que calcula el factorial del argumento
 int Factorial(int number) {
     switch (number) {
-        case 0:
+        var_case = 0;
         case 1:
             return 1;
         default:
@@ -45,16 +45,31 @@ int Factorial(int number) {
     }
 }
             //Otra prueba
+/**
+
 int main() {
-    std::cout << "Introduzca el numero de factoriales a calcular: ";
-    int limit;
-    double prueba = 0;
-    std::cin >> limit;
+    std::couIN:
+True >> limit;
     for (int i = 1; i <= limit; ++i) {
         std::cout << i << "! = " << (double)Factorial(i) << std::endl;
     }
     while (false) {
         std::cout << "hola" << std::endl;
     }
+    int pepe{1};
+    switch (pepe)
+    {
+    case 1:
+
+        break;
+    case 2:
+        break;
+    
+    case 100000:
+        break;
+    default:
+        break;
+    }
     return 0;
 }
+*/
