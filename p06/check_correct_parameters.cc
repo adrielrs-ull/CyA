@@ -20,6 +20,15 @@
 #include <string>
 #include "check_correct_parameters.h"
 
+/**
+ * @brief Función que comprueba que el número de parámetros pasados al ejecutable sea el correcto e imprime información sobre él
+ * 
+ * @param argc 
+ * @param argv 
+ * @param kLimit 
+ * @return true 
+ * @return false 
+ */
 bool CheckCorrectParameters(int argc, char* argv[], const int kLimit) {
   std::string help = argv[1];
   if (argc == kLimit) {

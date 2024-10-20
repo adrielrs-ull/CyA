@@ -17,21 +17,37 @@
 #include <iostream>
 #include <set>
 #include "alfabeto.h"
-
+/**
+ * @brief Construct a new Alfabeto:: Alfabeto object
+ * 
+ */
 Alfabeto::Alfabeto() {
   alfabeto_ = alfabeto_;
 }
-
+/**
+ * @brief Construct a new Alfabeto:: Alfabeto object
+ * 
+ * @param alfabeto 
+ */
 Alfabeto::Alfabeto(std::set<symbol>& alfabeto) {
   alfabeto_ = alfabeto;
 }
-
+/**
+ * @brief Getter del alfabeto
+ * 
+ * @return std::set<symbol> 
+ */
 std::set<symbol> Alfabeto::GetAlfabeto() {
   return alfabeto_;
 }
 
-//symbol es un typedef de char
-//Esta función la usamos para mostrar el alfabeto en el archivo de salida
+/**
+ * @brief Mostrar el alfabeto
+ * 
+ * @param os 
+ * @param alfabeto 
+ * @return std::ostream& 
+ */
 std::ostream& operator<<(std::ostream& os, Alfabeto& alfabeto) {
   int counter{0};
   //recorro el set con un contador para saber cuàndo llego al final y poder cerrar las llaves
@@ -50,6 +66,13 @@ std::ostream& operator<<(std::ostream& os, Alfabeto& alfabeto) {
   return os;
 }
 
+/**
+ * @brief Inserción de alfabeto
+ * 
+ * @param is 
+ * @param alfabeto 
+ * @return std::istream& 
+ */
 std::istream& operator>>(std::istream& is, Alfabeto& alfabeto) {
   std::string aux;
   is >> aux;
@@ -59,11 +82,22 @@ std::istream& operator>>(std::istream& is, Alfabeto& alfabeto) {
   return is;
 }
 
-//Esta función sirve para insertar en el set el nuevo simbolo
+/**
+ * @brief Añadir nuevos elementos al alfabeto
+ * 
+ * @param simbolo 
+ */
 void Alfabeto::InsertarEnAlfabeto(const symbol& simbolo) {
   alfabeto_.insert(simbolo);
 }
 
+/**
+ * @brief Comprobar si un simbolo existe en el alfabeto
+ * 
+ * @param simbolo 
+ * @return true 
+ * @return false 
+ */
 bool Alfabeto::ExisteEnAlfabeto(symbol simbolo) {
   if (alfabeto_.find(simbolo) != alfabeto_.end()) {
     return true;

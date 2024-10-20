@@ -17,6 +17,13 @@
 #include "automata.h"
 #include "check_correct_parameters.h"
 
+/**
+ * @brief main del programa
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char* argv[]) {
   std::ifstream definicion_automata(argv[1]);
   std::ifstream cadenas(argv[2]);
