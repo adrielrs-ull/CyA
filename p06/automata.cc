@@ -14,6 +14,7 @@
 // 17/09/2024 - Creaci´on (primera versi´on) del c´odigo
 
 #include "automata.h"
+#include <stack>
 
 /**
  * @brief Constructor del programa leyendo un archivo
@@ -186,10 +187,12 @@ std::ostream& operator<<(std::ostream& os, Automata& automata) {
       os << elemento << std::endl;
     }
     
-    for (auto& estado : automata.GetTransiciones()) {
-      std::pair<int, symbol> pair = estado.first;
+    const auto& transiciones = automata.GetTransiciones();
+    for (auto& estado : transiciones) {
+      const std::pair<int, symbol> pair = estado.first;
+      const std::set<int>& destinos = estado.second;
       if (automata.GetTransiciones().find(pair) != automata.GetTransiciones().end()) {
-        for (int elemento : automata.GetTransiciones()[pair]) {
+        for (int elemento : destinos) {
           os << "Estado: " << pair.first << " Simbolo: " << pair.second << " --> " << elemento << std::endl;
         }
       }
@@ -226,28 +229,43 @@ bool Automata::EsDeAceptacion(int estado) {
  * @return std::set<int> 
  */
 std::set<int> Automata::EpsilonTransicion(std::set<int>& conjunto_estados) {
-  //creo el conjunto resultante
-  std::set<int> epsilon_transicion_conjunto;
-  //recorro el conjunto de estados
+  // Conjunto resultante que contendrá todos los estados alcanzados por epsilon transiciones
+  std::set<int> epsilon_transicion_conjunto = conjunto_estados;
+  
+  // Pila para realizar la búsqueda iterativa 
+  std::stack<int> pila_estados;
+
+  // Inicializamos la pila con los estados del conjunto original
   for (int estado : conjunto_estados) {
-    epsilon_transicion_conjunto.insert(estado);
-    //recorro las transiciones
+    pila_estados.push(estado);
+  }
+
+  // Procesamos la pila mientras haya estados que revisar
+  while (!pila_estados.empty()) {
+    int estado_actual = pila_estados.top();
+    pila_estados.pop();
+
+    // Recorrer todas las transiciones de ese estado
     for (auto& transicion : transiciones_) {
-      //comparo si hay alguna epsilon transicion de mi estado
       auto clave = transicion.first;
       auto destino = transicion.second;
-      if (clave.first == estado && clave.second == '&') {
-        for (auto& elemento : destino) {
-          //compruebo si el elemento ya se encuentra en el conjunto
-          if (epsilon_transicion_conjunto.find(elemento) == epsilon_transicion_conjunto.end()) {
-            epsilon_transicion_conjunto.insert(elemento);
+
+      // Si la transición es una epsilon ('&') desde el estado actual
+      if (clave.first == estado_actual && clave.second == '&') {
+        // Añadir los estados de destino si no han sido visitados
+        for (int estado_destino : destino) {
+          if (epsilon_transicion_conjunto.find(estado_destino) == epsilon_transicion_conjunto.end()) {
+            epsilon_transicion_conjunto.insert(estado_destino);
+            pila_estados.push(estado_destino); // Agregar el nuevo estado a la pila para procesar sus transiciones
           }
         }
       }
     }
   }
+
   return epsilon_transicion_conjunto;
 }
+
 
 /**
  * @brief Función que reconoce si una cadena es aceptada o no
@@ -292,8 +310,9 @@ bool Automata::CadenaReconocida(const std::string& cadena, std::set<int>& estado
     }
   }
 
-  return Automata::CadenaReconocida(cadena, estados_siguientes, posicion + 1);
+  std::set<int> clausura_siguiente = EpsilonTransicion(estados_siguientes);
 
+  return Automata::CadenaReconocida(cadena, clausura_siguiente, posicion + 1);
 }
 
 /**

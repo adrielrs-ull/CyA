@@ -93,13 +93,13 @@ void Alfabeto::InsertarEnAlfabeto(const symbol& simbolo) {
 
 /**
  * @brief Comprobar si un simbolo existe en el alfabeto
- * 
+ * Hay que destacar que & no existe en el alfabeto pero está para que las epsilon transiciones puedan hacerse
  * @param simbolo 
  * @return true 
  * @return false 
  */
 bool Alfabeto::ExisteEnAlfabeto(symbol simbolo) {
-  if (alfabeto_.find(simbolo) != alfabeto_.end()) {
+  if ((alfabeto_.find(simbolo) != alfabeto_.end()) || simbolo == '&') {
     return true;
   }
   return false;
