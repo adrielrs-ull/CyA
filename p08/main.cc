@@ -13,12 +13,15 @@
 #include <iostream>
 #include <fstream>
 #include "grammar_cnf.h"
+#include "check_correct_parameters.h"
 
 int main(int argc, char* argv[]) {
-  std::ifstream archivo_entrada(argv[1]);
-  std::ofstream archivo_salida(argv[2]);
-  GrammarCNF grammar(archivo_entrada);
-  grammar.MostrarGrammarInicial();
-  grammar.NewGrammarCNF(archivo_salida);
+  if (!CheckCorrectParameters(argc, argv, 3)) {
+    std::ifstream archivo_entrada(argv[1]);
+    std::ofstream archivo_salida(argv[2]);
+    GrammarCNF grammar(archivo_entrada);
+    grammar.MostrarGrammarInicial();
+    grammar.NewGrammarCNF(archivo_salida);
+  }
   return 0;
 }
