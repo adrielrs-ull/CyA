@@ -15,8 +15,15 @@
 #include "grammar_cnf.h"
 #include "check_correct_parameters.h"
 
+/**
+ * @brief Main del programa
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char* argv[]) {
-  if (!CheckCorrectParameters(argc, argv, 3)) {
+  if (CheckCorrectParameters(argc, argv, 3)) {
     std::ifstream archivo_entrada(argv[1]);
     std::ofstream archivo_salida(argv[2]);
     GrammarCNF grammar(archivo_entrada);
