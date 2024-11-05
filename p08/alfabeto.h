@@ -16,6 +16,7 @@ class Alfabeto {
   bool ExisteEnAlfabeto(symbol);
   std::set<symbol> GetAlfabeto();
   void MostrarAlfabeto();
+  int GetSizeAlfabeto() const;
   friend std::ostream& operator<<(std::ostream&, Alfabeto&);
   friend std::istream& operator>>(std::istream&, Alfabeto&);
   void InsertarEnAlfabeto(const symbol&);

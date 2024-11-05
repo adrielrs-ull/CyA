@@ -52,7 +52,7 @@ GrammarCNF::GrammarCNF(std::ifstream& archivo_entrada) {
   for (int i{0}; i < n_no_terminales; ++i) {
     archivo_entrada >> no_terminal;
     // Si hay más de un no terminal o no hay nada se genera un error
-    if (static_cast<int>(simbolo.size()) > 1 || static_cast<int>(simbolo.size()) == 0) {
+    if (static_cast<int>(simbolo.size()) == 0) {
       std::cerr << "Un No Terminal no cumple las necesidades" << std::endl;
       std::exit(EXIT_FAILURE);
     }
@@ -79,6 +79,25 @@ GrammarCNF::GrammarCNF(std::ifstream& archivo_entrada) {
     std::string left, right;
     // Asigno el simobolo que produce y la producción
     iss >> left >> right;
+    // Comprobamos si hay alguna producción inútil en el lado izquierdo o derecho de la producción
+    if (!NoTerminalExistente(left)) {
+      std::cerr << "Se ha encontrado una producción inútil" << std::endl;
+      std::exit(EXIT_FAILURE);
+    }
+    int stop{0};
+    // Comprobamos si el último simbolo de la produccion es un no terminal que está formado su nombre por dos caracteres
+    // Así en el bucle logramos parar en el último simbolo no terminal o terminal
+    if (NoTerminalExistente(std::string(1, right[static_cast<int>(right.size() - 2)]) + std::string(1, right[static_cast<int>(right.size() - 1)]))) {
+      stop = 1;
+    }
+    for (int i{0}; i < static_cast<int>(right.size()) - stop; ++i) {
+      // Esta variable son para los casos en los que tengamos una gramatica en CNF y halla simbolos como Ca donde a es un simbolo del alfabeto
+      std::string simbolo_compuesto = std::string(1, right[i]) + std::string(1, right[i+1]);
+      if (!alfabeto_.ExisteEnAlfabeto(right[i]) && !NoTerminalExistente(std::string(1, right[i])) && !NoTerminalExistente(simbolo_compuesto)) {
+        std::cerr << "Se ha encontrado una producción inútil" << std::endl;
+        std::exit(EXIT_FAILURE);
+      } 
+    }
     // Si en la produccion solo hay una produccion y no es un termianl salta el error de produccion unitaria
     if (static_cast<int>(right.size()) == 1 && NoTerminalExistente(right)) {
       std::cerr << "Se ha encontrado una producción unitaria" << std::endl;
@@ -147,6 +166,8 @@ void GrammarCNF::MostrarGrammarInicial() {
  * @param archivo_salida 
  */
 void GrammarCNF::NewGrammarCNF(std::ofstream& archivo_salida) {
+  bool non_phase1{true};
+  bool non_phase2{true};
   // FASE 1
   // Creo una gramática auxiliar
   std::multimap<std::string, std::string> new_grammar;
@@ -154,8 +175,24 @@ void GrammarCNF::NewGrammarCNF(std::ofstream& archivo_salida) {
   for (auto& produccion : grammar_) {
     std::string left = produccion.first;
     std::string right = produccion.second;
-    // Si la producción no produce solo un terminal
-    if (right.size() >= 2) {
+    bool simbolo_alfabeto{false};
+    // Debido a los simbolos compuestos en CNF busco coincidecias Ca donde a es un simbolo del alfabeto y le resto 1 al size para que cuente como un único no terminal
+    int rigth_size{static_cast<int>(right.size())};
+    for (int i{0}; i < rigth_size; ++i) {
+      // Si encontramos Ca donde a es un simbolo del alfabeto y desplazamos uno para recorrer bien el bucle
+      if (NoTerminalExistente(std::string(1, right[i]) + std::string(1, right[i + 1]))) {
+        ++i;
+      } else if (alfabeto_.ExisteEnAlfabeto(right[i])) {
+        // Si hay un simbolo del alfabeto lo marcamos
+        simbolo_alfabeto = true;
+      }
+
+    }
+    
+    // Si la producción no produce solo un terminal y además se encuentra un simbolo del alfabeto en la producción
+    if (right.size() >= 2 && simbolo_alfabeto) {
+      // Marcamos que se ha entrado a la fase 1
+      non_phase1 = false;
       // Creo una variable auxiliar
       std::string new_rigth;
       // Recorro la producción
@@ -187,13 +224,24 @@ void GrammarCNF::NewGrammarCNF(std::ofstream& archivo_salida) {
   //FASE 2
   // Creamos una variable que nos ayudará para enumerar los no terminales auxiliares que añadiremos a la gramática
   int n_new_production{0};
+  // Creamos la gramática resultante en Forma Normal de Chomsky
+  std::multimap<std::string, std::string> grammar_cnf;
   // Recorro la gramática generada por la primera fase
   for (auto produccion : new_grammar) {
     // Establezo la producción y quién la produce
     std::string left = produccion.first;
     std::string rigth = produccion.second;
+    // Debido a los simbolos compuestos en CNF busco coincidecias Ca donde a es un simbolo del alfabeto y le resto 1 al size para que cuente como un único no terminal
+    int rigth_size{static_cast<int>(rigth.size())};
+    for (int i{0}; i < rigth_size; ++i) {
+      if (NoTerminalExistente(std::string(1, rigth[i]) + std::string(1, rigth[i + 1]))) {
+        --rigth_size;
+      }
+    }    
     // Si la producción tiene más de dos no terminales
-    if (rigth.size() >= 3) {
+    if (rigth_size >= 3) {
+      // Marcamos que se ha entrado a la fase 2
+      non_phase2 = false;
       // Creo una nueva producción auxiliar
       std::string new_right;
       int rigth_size = static_cast<int>(rigth.size());
@@ -218,6 +266,7 @@ void GrammarCNF::NewGrammarCNF(std::ofstream& archivo_salida) {
       for (int i{0}; i < rigth_size - stop; ++i) {
         // Creo las producciones 'D' auxiliares
         std::string D = "D" + std::to_string(n_new_production);
+        no_terminales_.emplace_back(D);
         // Incremento el contador para aumentar el número del nombre de estas producciones
         n_new_production++;
         // Aquí compruebo si estoy ante algún no terminal del tipo 'C', puesto que si es así
@@ -232,29 +281,40 @@ void GrammarCNF::NewGrammarCNF(std::ofstream& archivo_salida) {
           new_right = std::string(1, rigth[i]) + D;
         }
         // inserto en la gramática la producción
-        grammar_cnf_.insert({left, new_right});
+        grammar_cnf.insert({left, new_right});
         // Actualizo el 'D' para mantener esta estructura "recursiva"
         left = D; 
       }
       // Dependiendo de la posición de parada añadiré el resto de la producción
       new_right = rigth.substr((static_cast<int>(rigth.size()) - stop));
-      grammar_cnf_.insert({left, new_right});
+      grammar_cnf.insert({left, new_right});
     } else {
-      grammar_cnf_.insert({left, rigth});
+      grammar_cnf.insert({left, rigth});
     }
   }
-  // Se imprime el resultado de la fase 1 del algoritmo
-  archivo_salida << "--FASE 1--" << std::endl;
-  for (auto& prod : new_grammar) {
-    archivo_salida << prod.first << " -> " << prod.second << std::endl;
+
+  if(!archivo_salida.is_open()) {
+    std::cerr << "Ha habido un problema al abrir el archivo" << std::endl;
+    std::exit(EXIT_FAILURE); 
   }
-  archivo_salida << std::endl;
-  archivo_salida << std::endl;
-  // Se imprime la fase 2 del algoritmo
-  archivo_salida << "--FASE 2--" << std::endl;
-  for (auto& prod : grammar_cnf_) {
-    archivo_salida << prod.first << " -> " << prod.second << std::endl;
+  // Si no ha entrado en ninguna de las dos fases es porque ya estaba en CNF
+  if (non_phase1 && non_phase2) {
+    archivo_salida << "La gramática introducida ya se encontraba en Forma Normal de Chomsky" << std::endl;
+  } else {
+    // Imprimimos el resultado en el archivo de salida
+    archivo_salida << alfabeto_.GetSizeAlfabeto() << std::endl;
+    archivo_salida << alfabeto_;
+    archivo_salida << no_terminales_.size() << std::endl;
+    for (int i{0}; i < static_cast<int>(no_terminales_.size()); ++i) {
+      archivo_salida << no_terminales_[i] << std::endl;
+    }
+    archivo_salida << grammar_cnf.size() << std::endl;
+    for (auto& prod : grammar_cnf) {
+      archivo_salida << prod.first << " " << prod.second << std::endl;
+    }
   }
+  
+  archivo_salida.close();
 }
 
 
@@ -266,3 +326,4 @@ void GrammarCNF::NewGrammarCNF(std::ofstream& archivo_salida) {
 void GrammarCNF::InsertarNoTerminal(const std::string& no_terminal) {
   no_terminales_.push_back(no_terminal);
 }
+

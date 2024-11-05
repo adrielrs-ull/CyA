@@ -49,19 +49,9 @@ std::set<symbol> Alfabeto::GetAlfabeto() {
  * @return std::ostream& 
  */
 std::ostream& operator<<(std::ostream& os, Alfabeto& alfabeto) {
-  int counter{0};
   //recorro el set con un contador para saber cuàndo llego al final y poder cerrar las llaves
-  for (symbol simbolo : alfabeto.GetAlfabeto()) {
-    if (counter == 0) {
-      os << "{";
-    }
-    
-    if (counter == static_cast<int>(alfabeto.GetAlfabeto().size()) - 1) {
-      os << simbolo << "}" << std::endl;
-    } else {
-      os << simbolo << ", ";
-    }
-    counter++;
+  for (symbol simbolo : alfabeto.GetAlfabeto()) {  
+    os << simbolo << std::endl;
   }
   return os;
 }
@@ -105,10 +95,22 @@ bool Alfabeto::ExisteEnAlfabeto(symbol simbolo) {
   return false;
 }
 
-
+/**
+ * @brief Función para mostrar el alfabeto
+ * 
+ */
 void Alfabeto::MostrarAlfabeto() {
   for (symbol simbolo : alfabeto_) {
-    std::cout << simbolo << " ";
+    std::cout << simbolo << std::endl;
   }
-  std::cout << std::endl;
+}
+
+/**
+ * @brief Retorna el tamaño entero del alfabeto
+ * 
+ * @return int 
+ */
+int Alfabeto::GetSizeAlfabeto() const {
+  int tamaño_alfabeto = static_cast<int>(alfabeto_.size());
+  return tamaño_alfabeto;
 }

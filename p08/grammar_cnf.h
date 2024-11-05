@@ -22,7 +22,6 @@ class GrammarCNF {
   std::multimap<std::string, std::string> grammar_;
   std::vector<std::string> no_terminales_;
   symbol simbolo_arranque_;
-  std::multimap<std::string, std::string> grammar_cnf_;
 };
 
 
