@@ -59,6 +59,8 @@ void point_set::EMST() {
 
     if (i != j) {
       merge_subtrees(st, a, i, j);
+    } else {
+      ++denied_unions_;
     }
   }
 
@@ -74,10 +76,12 @@ void point_set::compute_arc_vector(CyA::arc_vector &av) const {
     for (int j = i + 1; j < n; ++j) {
       const CyA::point &p_j = (*this)[j];
       const double dist = euclidean_distance(std::make_pair(p_i, p_j));
-      av.push_back(std::make_pair(dist, std::make_pair(p_i, p_j)));
+      if (dist > umbral_) {
+        av.push_back(std::make_pair(dist, std::make_pair(p_i, p_j)));
+      }
+      
     }
   }
-
   std::sort(av.begin(), av.end()); 
 }
 
@@ -106,3 +110,21 @@ void point_set::write(std::ostream &os) const {
 
   // Puedes añadir aquí información adicional que desees mostrar
 }
+
+int point_set::MaxIncidentArcs() {
+  int max_incident_arcs{0};
+  for (CyA::point p : get_points()) {
+    int edges_arc{0};
+    for (CyA::arc& arc : emst_) {
+      if (p == arc.first || p == arc.second) {
+        ++edges_arc;
+      }
+    }
+    if (edges_arc > max_incident_arcs) {
+      max_incident_arcs = edges_arc;
+    }
+  }  
+  return max_incident_arcs;
+}
+
+

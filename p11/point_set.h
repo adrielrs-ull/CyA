@@ -10,6 +10,7 @@ class point_set : public CyA::point_vector {
   ~point_set(void) {}
   
   void EMST(void);
+  int MaxIncidentArcs();
 
   void write_tree(std::ostream &os) const;
   void write(std::ostream &os) const;
@@ -25,4 +26,6 @@ class point_set : public CyA::point_vector {
   double compute_cost(void) const;
   double euclidean_distance(const CyA::arc& a) const;
   CyA::tree emst_;
+  int denied_unions_;
+  double umbral_{130};
 };
