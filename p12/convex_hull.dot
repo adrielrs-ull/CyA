@@ -1,0 +1,17 @@
+graph convex_hull {
+  node [fontsize=10];
+  0 [pos="-97,-51!" shape=point];
+  1 [pos="-74,-78!" shape=point];
+  2 [pos="-73,61!" shape=point];
+  3 [pos="-1,95!" shape=point];
+  4 [pos="82,-60!" shape=point];
+  5 [pos="90,83!" shape=point];
+  6 [pos="100,-56!" shape=point];
+  0 -- 1;
+  1 -- 2;
+  2 -- 3;
+  3 -- 4;
+  4 -- 5;
+  5 -- 6;
+  6 -- 0;
+}
