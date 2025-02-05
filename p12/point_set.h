@@ -18,7 +18,9 @@ namespace CyA {
     ~point_set(void);
     
     void quickHull(void);
- 
+
+    int GetMaxValueR() const {return max_valor_recursividad_;}
+
     void write_hull(std::ostream &os) const;
     void write(std::ostream &os) const;
     void write_hull_dot(const std::string& filename) const;
@@ -46,7 +48,9 @@ namespace CyA {
    private:
     point_vector hull_;
     void quickHull(const line &l, int side);
- 
+    
+    int max_valor_recursividad_{0};
+
     double distance(const line &l, const point &p) const;
     int find_side(const line &l, const point &p) const;
     void x_bounds(point &min_x, point &max_x) const;

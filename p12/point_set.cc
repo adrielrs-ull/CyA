@@ -14,6 +14,7 @@ void point_set::write_hull(std::ostream & os) const {
   for (const point &p : hull_) {
     os << "(" << p.first << ",  " << p.second << ")" << std::endl;
   }
+  os << "\n\nValor profundidad recursividad: " << max_valor_recursividad_ << std::endl;
 }
 
 void point_set::write(std::ostream & os) const {
@@ -47,7 +48,7 @@ void point_set::x_bounds(point & min_x, point & max_x) const {
 
 void point_set::quickHull(void) {
   hull_.clear();
-
+  ++max_valor_recursividad_;
   CyA::point min_x_point; 
   CyA::point max_x_point;
 
@@ -63,6 +64,7 @@ void point_set::quickHull(void) {
 
 
 void point_set::quickHull(const CyA::line &l, int side) {
+  ++max_valor_recursividad_;
   CyA::point farthest;
 
   if (farthest_point(l, side, farthest)) {

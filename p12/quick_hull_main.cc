@@ -1,6 +1,8 @@
 #include <iostream>
 #include "point_set.h"
 
+//Comando png -->  dot -Tpng convex_hull.dot -o convex_hull1.png 
+
 using namespace CyA;
 
 int main() {
